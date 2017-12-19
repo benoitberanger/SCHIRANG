@@ -17,6 +17,8 @@ for file = 1 : length(list_img_files)
     
     imgObj.(name).LinkToWindowPtr( S.PTB.wPtr );
     
+    imgObj.(name).MakeTexture;
+    
     % imgObj.(name).AssertReady; % just to check
     
 end

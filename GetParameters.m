@@ -42,7 +42,7 @@ Parameters.Video.SubjectDistance = 0.120; % m
 Parameters.Video.ScreenWidthM    = 0.040; % m
 Parameters.Video.ScreenHeightM   = 0.030; % m
 
-Parameters.Video.ScreenBackgroundColor = [50 50 50]; % [R G B] ( from 0 to 255 )
+Parameters.Video.ScreenBackgroundColor = [170 170 170]; % [R G B] ( from 0 to 255 )
 
 %%%%%%%%%%%%
 %   Text   %

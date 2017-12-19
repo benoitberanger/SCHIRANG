@@ -50,6 +50,8 @@ try
                 
             case '' % --------------------------------
                 
+                Screen('DrawingFinished',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip',S.PTB.wPtr);
                 
             otherwise % ---------------------------------------------------
                 

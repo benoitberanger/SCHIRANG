@@ -20,6 +20,8 @@ classdef Image < baseObject
         baseRect  = zeros(0,4) % [x1 y1 x2 y2] pixels, PTB coordinates
         scaleRect = zeros(0,4) % [x1 y1 x2 y2] pixels, PTB coordinates
         
+        texPtr    = zeros(0,0) % pointer to the texure in PTB
+        
     end % properties
     
     
