@@ -6,9 +6,9 @@ global S
 % Create
 switch S.Task
     case 'CEIL'
-        ER = EventRecorder( { 'event_name' , 'onset(s)' , 'durations(s)' , 'content' } , size(EP.Data,1) );
+        ER = EventRecorder( EP.Header(1:3) , EP.EventCount );
     case 'RECOG'
-        ER = EventRecorder( { 'event_name' , 'onset(s)' , 'durations(s)' , 'content' } , size(EP.Data,1) );
+        ER = EventRecorder( EP.Header(1:3) , EP.EventCount );
     case 'EyelinkCalibration'
 end
 

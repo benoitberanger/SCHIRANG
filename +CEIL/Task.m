@@ -32,7 +32,6 @@ try
     % Initialize some variables
     EXIT = 0;
     
-    
     % Loop over the EventPlanning
     for evt = 1 : size( EP.Data , 1 )
         
@@ -42,16 +41,139 @@ try
             
             case 'StartTime' % --------------------------------------------
                 
+                Cross.Draw
+                Screen('DrawingFinished',S.PTB.wPtr);
+                Screen('Flip',S.PTB.wPtr);
+                
                 StartTime = Common.StartTimeEvent;
+                lastFlipOnset = StartTime - EP.get(evt+1,'answer'); % just to conpensate @ first trial
                 
             case 'StopTime' % ---------------------------------------------
                 
-                [ ER, RR, StopTime ] = Common.StopTimeEvent( EP, ER, RR, StartTime, evt );
+                % Fixation duration handeling
                 
-            case '' % --------------------------------
+                StopTime = WaitSecs('UntilTime', lastFlipOnset + EP.get(evt-1,'answer') );
+                
+                % Record StopTime
+                ER.AddStopTime( 'StopTime' , StopTime - StartTime );
+                RR.AddStopTime( 'StopTime' , StopTime - StartTime );
+                
+                ShowCursor;
+                Priority( 0 );
+                
+            case 'test' % --------------------------------
+                %% ~~~ Step 1 : Jitter between trials ~~~
+                
+                Cross.Draw
+                when = lastFlipOnset + EP.get(evt,'answer') - S.PTB.slack;
+                Screen('DrawingFinished',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                ER.AddEvent({EP.get(evt,'name') lastFlipOnset-StartTime []})
+                
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                when = lastFlipOnset + EP.get(evt,'jitter') - S.PTB.slack;
+                while 1
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    if secs >= when
+                        break
+                    end
+                end
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
+                %% ~~~ Step 2 : Blank screen ~~~
                 
                 Screen('DrawingFinished',S.PTB.wPtr);
-                lastFlipOnset = Screen('Flip',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                when = lastFlipOnset + EP.get(evt,'blank') - S.PTB.slack;
+                while 1
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    if secs >= when
+                        break
+                    end
+                end
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
+                %% ~~~ Step 3 : Picture ~~~
+                
+                imgObj.('test1').Draw
+                Screen('DrawingFinished',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                when = lastFlipOnset + EP.get(evt,'picture') - S.PTB.slack;
+                while 1
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    if secs >= when
+                        break
+                    end
+                end
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
+                %% ~~~ Step 4 : Answer ~~~
+                
+                Screen('FillRect', S.PTB.wPtr, 0, [0 0 200 200])
+                Screen('DrawingFinished',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                when = lastFlipOnset + EP.get(evt,'answer') - S.PTB.slack;
+                while 1
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    if secs >= when
+                        break
+                    end
+                end
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
                 
             otherwise % ---------------------------------------------------
                 
