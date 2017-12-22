@@ -69,6 +69,7 @@ try
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 ER.AddEvent({EP.get(evt,'name') lastFlipOnset-StartTime []})
+                RR.AddEvent({['Jitter__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.get(evt,'jitter') - S.PTB.slack;
@@ -96,6 +97,7 @@ try
                 
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                RR.AddEvent({['Blank__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.get(evt,'blank') - S.PTB.slack;
@@ -124,6 +126,7 @@ try
                 imgObj.('test1').Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                RR.AddEvent({['Picture__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.get(evt,'picture') - S.PTB.slack;
@@ -152,6 +155,7 @@ try
                 Screen('FillRect', S.PTB.wPtr, 0, [0 0 200 200])
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                RR.AddEvent({['Answer__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.get(evt,'answer') - S.PTB.slack;
