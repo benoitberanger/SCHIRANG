@@ -37,7 +37,7 @@ try
         
         Common.CommandWindowDisplay( EP, evt );
         
-        switch EP.Data{evt,1}
+        switch EP.get(evt,'name')
             
             case 'StartTime' % --------------------------------------------
                 

@@ -3,24 +3,35 @@ global S
 
 imgObj = struct;
 
-list_img_files = dir( fullfile('..','img',S.SubjectID) );
-list_img_files = list_img_files(3:end); % remove '.' and '..'
+CatValDATA   = CEIL.Prepare.CheckImagesDir(S.SubjectID);
+S.CatValDATA = CatValDATA;
 
-for file = 1 : length(list_img_files)
+for c = 1 : length(CatValDATA.nameCategory)
     
-    [~,name,~] = fileparts(list_img_files(file).name);
+    nameCat = CatValDATA.nameCategory{c};
     
-    imgObj.(name) = Image( ...
-        fullfile(list_img_files(file).folder,list_img_files(file).name), ...
-        [S.PTB.CenterH S.PTB.CenterV], ...
-        1);
+    for v = 1 : length(CatValDATA.Values)
+        
+        filename = CatValDATA.(nameCat){v};
+        
+        currentObject = Image( ...
+            filename, ...
+            [S.PTB.CenterH S.PTB.CenterV], ...
+            1);
+        
+        currentObject.LinkToWindowPtr( S.PTB.wPtr );
+        
+        currentObject.MakeTexture;
+        
+        % currentObject.AssertReady; % just to check
+        
+        imgObj.(nameCat){v} = currentObject ;
+        
+    end % values
     
-    imgObj.(name).LinkToWindowPtr( S.PTB.wPtr );
-    
-    imgObj.(name).MakeTexture;
-    
-    % imgObj.(name).AssertReady; % just to check
-    
-end
+end % category
+
+
+
 
 end % function

@@ -766,13 +766,13 @@ end % function
 % -------------------------------------------------------------------------
 function edit_SubjectID_Callback(hObject, ~)
 
-NrChar = 2;
+NrChar = 3;
 
 id_str = get(hObject,'String');
 
 if length(id_str) ~= NrChar
     set(hObject,'String','')
-    error('SubjectID must be %d chars', NrChar)
+    error('SubjectID must be %d chars, such as 001, 002, ...', NrChar)
 end
 
 fprintf('SubjectID OK : %s \n', id_str)

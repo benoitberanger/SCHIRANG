@@ -240,7 +240,7 @@ switch get(get(handles.uipanel_EyelinkMode,'SelectedObject'),'Tag')
                 error('SCHIRANG:Task','Task ?')
         end
         
-        EyelinkFile_noRun = [ 'AD_' SubjectID task ];
+        EyelinkFile_noRun = [ 'SC' SubjectID task ];
         
         EyelinkFile = [EyelinkFile_noRun sprintf('%0.2d',RunNumber)];
         
