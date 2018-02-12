@@ -1,5 +1,5 @@
 classdef Image < baseObject
-    %IMAGE Class to prepare and draw image in PTB
+    %IMAGE Class to load, prepare and draw image in PTB
     
     %% Properties
     
@@ -7,20 +7,20 @@ classdef Image < baseObject
         
         % Parameters
         
-        path      = char       % path of the image
-        scale     = zeros(0,0) % scaling factor of the image
-        center    = zeros(0,2) % [ CenterX CenterY ] of the cross, in pixels, PTB coordinates
+        filename  % path of the image
+        scale = 1 % scaling factor of the image => 1 means original image
+        center    % [X-center-PTB, Y-center-PTB] in pixels, PTB coordinates
         
         % Internal variables
         
-        img       = zeros(0,0,3,'uint8') % iamge
-        map       = zeros(0,0,3,'uint8') % color map
-        alpha     = zeros(0,0,1,'uint8') % transparency
+        X         % image matrix
+        map       % color map
+        alpha     % transparency
         
-        baseRect  = zeros(0,4) % [x1 y1 x2 y2] pixels, PTB coordinates
-        scaleRect = zeros(0,4) % [x1 y1 x2 y2] pixels, PTB coordinates
+        baseRect  % [x1 y1 x2 y2] pixels, PTB coordinates, original rectangle
+        currRect  % [x1 y1 x2 y2] pixels, PTB coordinates, current  rectangle
         
-        texPtr    = zeros(0,0) % pointer to the texure in PTB
+        texPtr    % pointer to the texure in PTB
         
     end % properties
     
@@ -32,7 +32,7 @@ classdef Image < baseObject
         % -----------------------------------------------------------------
         %                           Constructor
         % -----------------------------------------------------------------
-        function self = Image( path, center, scale )
+        function self = Image( filename, center, scale )
             % self = Image( path = '../img/[subjectID]/test.png', center = [ CenterX CenterY ] (pixels), scale = 1  )
             
             % ================ Check input argument =======================
@@ -41,25 +41,21 @@ classdef Image < baseObject
             if nargin > 0
                 
                 % --- path ----
-                assert( ischar(path) && isvector(path) && ~isempty(path) , ...
-                    'path = path of the image' )
+                assert( ischar(filename) && isvector(filename) && ~isempty(filename) , ...
+                    'filename = path of the image' )
+                assert( exist(filename,'file')>0 , '%s cannot be found' )
+                self.filename = filename;
+                self.Load
                 
                 % --- center ----
-                assert( isvector(center) && isnumeric(center) && all( center>0 ) && all(center == round(center)) , ...
-                    'center = [ CenterX CenterY ] of the cross, in pixels' )
+                if nargin > 1 && ~isempty(center)
+                    self.Move(center);
+                end
                 
                 % --- scale ----
-                assert( isscalar(scale) && isnumeric(scale) && scale>0 , ...
-                    'width = scaling factor of the image' )
-                
-                self.path   = path;
-                self.center = center;
-                self.scale  = scale;
-                
-                % ================== Callback =============================
-                
-                self.Load
-                self.GenerateRect
+                if nargin > 2 && ~isempty(scale)
+                    self.Rescale(scale);
+                end
                 
             else
                 % Create empty instance
