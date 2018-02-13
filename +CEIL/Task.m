@@ -37,7 +37,9 @@ try
         
         Common.CommandWindowDisplay( EP, evt );
         
-        switch EP.get(evt,'name')
+        eventName = EP.get(evt,'name');
+        
+        switch eventName
             
             case 'StartTime' % --------------------------------------------
                 
@@ -46,13 +48,13 @@ try
                 Screen('Flip',S.PTB.wPtr);
                 
                 StartTime = Common.StartTimeEvent;
-                lastFlipOnset = StartTime - EP.get(evt+1,'answer'); % just to conpensate @ first trial
+                lastFlipOnset = StartTime - Parameters.Answer; % just to conpensate @ first trial
                 
             case 'StopTime' % ---------------------------------------------
                 
                 % Fixation duration handeling
                 
-                StopTime = WaitSecs('UntilTime', lastFlipOnset + EP.get(evt-1,'answer') );
+                StopTime = WaitSecs('UntilTime', lastFlipOnset + Parameters.Answer );
                 
                 % Record StopTime
                 ER.AddStopTime( 'StopTime' , StopTime - StartTime );
@@ -61,15 +63,15 @@ try
                 ShowCursor;
                 Priority( 0 );
                 
-            case 'test' % --------------------------------
+            otherwise % --------------------------------
                 %% ~~~ Step 1 : Jitter between trials ~~~
                 
                 Cross.Draw
-                when = lastFlipOnset + EP.get(evt,'answer') - S.PTB.slack;
+                when = lastFlipOnset + Parameters.Answer - S.PTB.slack;
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                ER.AddEvent({EP.get(evt,'name') lastFlipOnset-StartTime []})
-                RR.AddEvent({['Jitter__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
+                ER.AddEvent({eventName lastFlipOnset-StartTime []})
+                RR.AddEvent({['Jitter__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.get(evt,'jitter') - S.PTB.slack;
@@ -97,10 +99,10 @@ try
                 
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                RR.AddEvent({['Blank__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
+                RR.AddEvent({['Blank__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                when = lastFlipOnset + EP.get(evt,'blank') - S.PTB.slack;
+                when = lastFlipOnset + Parameters.Blank - S.PTB.slack;
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -123,13 +125,15 @@ try
                 
                 %% ~~~ Step 3 : Picture ~~~
                 
-                imgObj.('test1').Draw
+                % Image selector
+                fprintf('%s \n', imgObj.(EP.get(evt,'Category')){EP.get(evt,'index')}.filename)
+                imgObj.(EP.get(evt,'Category')){EP.get(evt,'index')}.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                RR.AddEvent({['Picture__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
+                RR.AddEvent({['Picture__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                when = lastFlipOnset + EP.get(evt,'picture') - S.PTB.slack;
+                when = lastFlipOnset + Parameters.DisplayPicture - S.PTB.slack;
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -155,10 +159,10 @@ try
                 Screen('FillRect', S.PTB.wPtr, 0, [0 0 200 200])
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
-                RR.AddEvent({['Answer__' EP.get(evt,'name')] lastFlipOnset-StartTime [] []})
+                RR.AddEvent({['Answer__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                when = lastFlipOnset + EP.get(evt,'answer') - S.PTB.slack;
+                when = lastFlipOnset + Parameters.Answer - S.PTB.slack;
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -177,11 +181,6 @@ try
                     break
                 end
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                
-                
-            otherwise % ---------------------------------------------------
-                
-                error('unknown envent')
                 
                 
         end % switch

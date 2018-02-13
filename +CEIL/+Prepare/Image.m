@@ -31,7 +31,4 @@ for c = 1 : length(CatValDATA.nameCategory)
     
 end % category
 
-
-
-
 end % function

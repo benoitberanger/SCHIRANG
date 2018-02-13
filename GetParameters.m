@@ -69,6 +69,7 @@ Parameters.CEIL.Images.Categories = {
     's' 'u' % sVSu, condition 2
     };
 Parameters.CEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
+Parameters.CEIL.Images.Values = sort(Parameters.CEIL.Images.Values); % need to sort : files names will be sorted
 
 %%%%%%%%%%%%%%
 %   RECOG    %

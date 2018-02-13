@@ -5,7 +5,7 @@ if nargout < 1 % only to plot the paradigme when we execute the function outside
     S.Environement    = 'MRI';
     S.OperationMode   = 'Acquisition';
     S.Parameters      = GetParameters;
-    S.Task            = 'CEIL'
+    S.Task            = 'CEIL';
 end
 
 
@@ -25,11 +25,11 @@ switch S.OperationMode
         Parameters.Answer                = 3.0; % seconds
         Parameters.RepetitionFactor      = 5;
     case 'FastDebug'
-        Parameters.MinPauseBetweenTrials = 0.5; % seconds
-        Parameters.MaxPauseBetweenTrials = 1.0; % seconds
+        Parameters.MinPauseBetweenTrials = 0.2; % seconds
+        Parameters.MaxPauseBetweenTrials = 0.5; % seconds
         Parameters.Blank                 = 0.5; % seconds
-        Parameters.DisplayPicture        = 2.0; % seconds
-        Parameters.Answer                = 1.0; % seconds
+        Parameters.DisplayPicture        = 0.5; % seconds
+        Parameters.Answer                = 0.5; % seconds
         Parameters.RepetitionFactor      = 1;
     case 'RealisticDebug'
         Parameters.MinPauseBetweenTrials = 4.0; % seconds
@@ -47,7 +47,7 @@ Values     = S.Parameters.(S.Task).Images.Values;
 nrCategories = size(Categories,1);
 nrValues     = length(Values);
 
-Paradigm = cell(nrCategories*nrValues*Parameters.RepetitionFactor,2);
+Paradigm = cell(nrCategories*nrValues*Parameters.RepetitionFactor,3);
 nrEvents = size(Paradigm,1);
 
 [ SequenceHighLow ] = Common.Randomize01( nrEvents/2, nrEvents/2, 5 );
@@ -72,6 +72,7 @@ for evt = 1 : nrEvents
         end
     end
     Paradigm{evt,2} = Values{pool.(catName)(end)};
+    Paradigm{evt,3} = pool.(catName)(end);
     
     pool.(catName)(end) = [];
     
@@ -83,11 +84,13 @@ for c = 1 : nrCategories
     assert( isempty(pool.(catName)), 'pool of values for %s is not in the end', catName )
 end % categories
 
+Parameters.Paradigm = Paradigm;
+
 
 %% Define a planning <--- paradigme
 
 % Create and prepare
-header = { 'event_name', 'onset(s)', 'duration(s)', 'jitter(s)'};
+header = { 'event_name', 'onset(s)', 'duration(s)', 'jitter(s)', 'Category (str)', 'Value (str)', 'Value index (uint)'};
 EP     = EventPlanning(header);
 
 % NextOnset = PreviousOnset + PreviousDuration
@@ -103,7 +106,7 @@ EP.AddStartTime('StartTime', 0);
 for evt = 1 : nrEvents
     jitter = Parameters.MinPauseBetweenTrials + (Parameters.MaxPauseBetweenTrials-Parameters.MinPauseBetweenTrials)*rand;
     duration = jitter + Parameters.Blank + Parameters.DisplayPicture + Parameters.Answer;
-    EP.AddEvent({[Paradigm{evt,1} Paradigm{evt,2}] NextOnset(EP) duration jitter});
+    EP.AddEvent({[Paradigm{evt,1} Paradigm{evt,2}] NextOnset(EP) duration jitter Paradigm{evt,1} Paradigm{evt,2} Paradigm{evt,3}});
 end
 
 % --- Stop ----------------------------------------------------------------
