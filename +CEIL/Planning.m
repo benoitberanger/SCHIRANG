@@ -4,10 +4,15 @@ global S
 if nargout < 1 % only to plot the paradigme when we execute the function outside of the main script
     S.Environement    = 'MRI';
     S.OperationMode   = 'Acquisition';
+    S.Parameters      = GetParameters;
+    S.Task            = 'CEIL'
 end
 
 
 %% Paradigme
+% Each picture has to be presented in each run.
+% Each picture will be presented the same number of times (1x each, 2x each, ...)
+% So the only parameter is this repetition factor : x1, x2, x3, ...
 
 Parameters = struct;
 
@@ -18,25 +23,71 @@ switch S.OperationMode
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 2.0; % seconds
         Parameters.Answer                = 3.0; % seconds
+        Parameters.RepetitionFactor      = 5;
     case 'FastDebug'
         Parameters.MinPauseBetweenTrials = 0.5; % seconds
         Parameters.MaxPauseBetweenTrials = 1.0; % seconds
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 2.0; % seconds
         Parameters.Answer                = 1.0; % seconds
+        Parameters.RepetitionFactor      = 1;
     case 'RealisticDebug'
-        Parameters.MinPauseBetweenTrials = 0.5; % seconds
-        Parameters.MaxPauseBetweenTrials = 1.0; % seconds
+        Parameters.MinPauseBetweenTrials = 4.0; % seconds
+        Parameters.MaxPauseBetweenTrials = 6.0; % seconds
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 2.0; % seconds
-        Parameters.Answer                = 1.0; % seconds
+        Parameters.Answer                = 3.0; % seconds
+        Parameters.RepetitionFactor      = 1;
 end
+
+
+Categories = S.Parameters.(S.Task).Images.Categories;
+Values     = S.Parameters.(S.Task).Images.Values;
+
+nrCategories = size(Categories,1);
+nrValues     = length(Values);
+
+Paradigm = cell(nrCategories*nrValues*Parameters.RepetitionFactor,2);
+nrEvents = size(Paradigm,1);
+
+[ SequenceHighLow ] = Common.Randomize01( nrEvents/2, nrEvents/2, 5 );
+
+pool = struct;
+for c = 1 : nrCategories
+    pool.(sprintf('%sVS%s',Categories{c,1},Categories{c,2})) = Shuffle(1:nrValues);
+end % categories
+
+% Fill paradigm with randomized events
+for evt = 1 : nrEvents
+    
+    catName = sprintf('%sVS%s',Categories{SequenceHighLow(evt)+1,1},Categories{SequenceHighLow(evt)+1,2});
+    
+    Paradigm{evt,1} = catName;
+    if isempty(pool.(catName)) % refill the pool
+        while 1
+            pool.(catName) = Shuffle(1:nrValues);
+            if ~strcmp(Paradigm{evt-1,2},Values{pool.(catName)(end)}) % be sure to not have 2 times the same event in a row
+                break
+            end
+        end
+    end
+    Paradigm{evt,2} = Values{pool.(catName)(end)};
+    
+    pool.(catName)(end) = [];
+    
+end % events
+
+% Just to check
+for c = 1 : nrCategories
+    catName = sprintf('%sVS%s',Categories{c,1},Categories{c,2});
+    assert( isempty(pool.(catName)), 'pool of values for %s is not in the end', catName )
+end % categories
 
 
 %% Define a planning <--- paradigme
 
 % Create and prepare
-header = { 'event_name', 'onset(s)', 'duration(s)', 'jitter(s)', 'blank(s)', 'picture(s)', 'answer(s)' };
+header = { 'event_name', 'onset(s)', 'duration(s)', 'jitter(s)'};
 EP     = EventPlanning(header);
 
 % NextOnset = PreviousOnset + PreviousDuration
@@ -49,9 +100,10 @@ EP.AddStartTime('StartTime', 0);
 
 % --- Stim ----------------------------------------------------------------
 
-for osef = 1:3
+for evt = 1 : nrEvents
     jitter = Parameters.MinPauseBetweenTrials + (Parameters.MaxPauseBetweenTrials-Parameters.MinPauseBetweenTrials)*rand;
-    EP.AddEvent({'test' NextOnset(EP) 16 jitter Parameters.Blank Parameters.DisplayPicture Parameters.Answer});
+    duration = jitter + Parameters.Blank + Parameters.DisplayPicture + Parameters.Answer;
+    EP.AddEvent({[Paradigm{evt,1} Paradigm{evt,2}] NextOnset(EP) duration jitter});
 end
 
 % --- Stop ----------------------------------------------------------------

@@ -2,6 +2,10 @@ function [ Parameters ] = GetParameters
 % GETPARAMETERS Prepare common parameters
 global S
 
+if isempty(S)
+    S.Environement = 'MRI';
+end
+
 
 %% Echo in command window
 
@@ -60,7 +64,11 @@ Parameters.Text.Color       = [128 128 128]; % [R G B] ( from 0 to 255 )
 Parameters.CEIL.FixationCross.ScreenRatio    = 0.10;          % ratio : dim   = ScreenWide *ratio_screen
 Parameters.CEIL.FixationCross.lineWidthRatio = 0.05;          % ratio : width = dim        *ratio_width
 Parameters.CEIL.FixationCross.Color          = [128 128 128]; % [R G B] ( from 0 to 255 )
-
+Parameters.CEIL.Images.Categories = {
+    's' 'k' % sVSk, condition 1
+    's' 'u' % sVSu, condition 2
+    };
+Parameters.CEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
 
 %%%%%%%%%%%%%%
 %   RECOG    %

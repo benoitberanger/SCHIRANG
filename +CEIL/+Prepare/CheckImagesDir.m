@@ -1,21 +1,18 @@
 function  [ out ] = CheckImagesDir( SubjectID )
 %CHECKIMAGESDIR will check if the architecture of dir + images name is correct
 
+global S
+
 out = struct;
 
 
 %% Parameters
 
-Categories = {
-    's' 'k' % sVSk
-    's' 'u' % sVSu
-    };
-
-Values = {'-20' '-10' '0' '+10' '+20'};
-
+Categories = S.Parameters.CEIL.Images.Categories;
+Values     = S.Parameters.CEIL.Images.Values;
 
 nrCategories = size(Categories,1);
-nrValues = length(Values);
+nrValues     = length(Values);
 
 % Save them
 out.Categories = Categories;

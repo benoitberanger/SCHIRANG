@@ -386,7 +386,7 @@ set(handles.text_LastFileName         , 'Visible','on'                          
 set(handles.text_LastFileName         , 'String' , DataFile(length(DataPath)+1:end))
 
 if strcmp(Task,'CEIL')
-        
+    
 elseif strcmp(Task,'RECOG')
     
 end
