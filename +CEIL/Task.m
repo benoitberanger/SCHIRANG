@@ -21,6 +21,8 @@ try
     Cross  = CEIL.Prepare.Cross;
     imgObj = CEIL.Prepare.Image;
     
+    [ Yes, No, Question ] = CEIL.Prepare.Texts;
+    
     
     %% Eyelink
     
@@ -157,7 +159,9 @@ try
                 
                 %% ~~~ Step 4 : Answer ~~~
                 
-                Screen('FillRect', S.PTB.wPtr, 0, [0 0 200 200])
+                Yes.Draw
+                No.Draw
+                Question.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 RR.AddEvent({['Answer__' eventName] lastFlipOnset-StartTime [] []})
