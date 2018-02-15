@@ -37,7 +37,7 @@ try
         
         Common.CommandWindowDisplay( EP, evt );
         
-        eventName = EP.get(evt,'name');
+        eventName = EP.Get('name',evt);
         
         switch eventName
             
@@ -74,7 +74,7 @@ try
                 RR.AddEvent({['Jitter__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                when = lastFlipOnset + EP.get(evt,'jitter') - S.PTB.slack;
+                when = lastFlipOnset + EP.Get('jitter',evt) - S.PTB.slack;
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -126,8 +126,9 @@ try
                 %% ~~~ Step 3 : Picture ~~~
                 
                 % Image selector
-                fprintf('%s \n', imgObj.(EP.get(evt,'Category')){EP.get(evt,'index')}.filename)
-                imgObj.(EP.get(evt,'Category')){EP.get(evt,'index')}.Draw
+                currentImage = imgObj.(EP.Get('Category',evt)){EP.Get('index',evt)};
+                fprintf('%s \n',currentImage.filename)
+                currentImage.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 RR.AddEvent({['Picture__' eventName] lastFlipOnset-StartTime [] []})

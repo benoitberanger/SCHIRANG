@@ -6,11 +6,12 @@ global S
 imgObj = struct;
 allObj = Image.empty; % create empty aray of object, this array is just for convenience
 
-CatValDATA   = CEIL.Prepare.CheckImagesDir(S.SubjectID);
+CatValDATA   = CEIL.Prepare.CheckImagesDir(S.SubjectID); % condition x modulator structure
 S.CatValDATA = CatValDATA;
 
-baseRect = zeros(length(CatValDATA.nameCategory)*length(CatValDATA.Values),4);
+baseRect = zeros(length(CatValDATA.nameCategory)*length(CatValDATA.Values),4); % to store all images sizes
 counter  = 0;
+
 
 %% Create objects == load images in PTB
 
@@ -35,10 +36,10 @@ for c = 1 : length(CatValDATA.nameCategory)
         
         % currentObject.AssertReady; % just to check
         
-        imgObj.(nameCat){v} = currentObject;
-        allObj(counter)     = currentObject;
+        imgObj.(nameCat){v} = currentObject; % store object in formated structure
+        allObj(counter)     = currentObject; % store object very simply, for latter user
         
-        baseRect(counter,:) = currentObject.baseRect;
+        baseRect(counter,:) = currentObject.baseRect; % store image size
         
     end % values
     
@@ -63,5 +64,6 @@ if maxRatio > 1 % image bigger than the screen
 else
     % nothing to do, all images will fit the screen
 end
+
 
 end % function

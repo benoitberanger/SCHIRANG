@@ -62,17 +62,17 @@ for evt = 1 : nrEvents
     
     catName = sprintf('%sVS%s',Categories{SequenceHighLow(evt)+1,1},Categories{SequenceHighLow(evt)+1,2});
     
-    Paradigm{evt,1} = catName;
+    Paradigm{evt,1} = catName; % save condition name (str)
     if isempty(pool.(catName)) % refill the pool
         while 1
-            pool.(catName) = Shuffle(1:nrValues);
-            if ~strcmp(Paradigm{evt-1,2},Values{pool.(catName)(end)}) % be sure to not have 2 times the same event in a row
+            pool.(catName) = Shuffle(1:nrValues);                     % shuffle a pool of values
+            if ~strcmp(Paradigm{evt-1,2},Values{pool.(catName)(end)}) % be sure to not have 2 times the same value in a row (it can happen after a refill)
                 break
             end
         end
     end
-    Paradigm{evt,2} = Values{pool.(catName)(end)};
-    Paradigm{evt,3} = pool.(catName)(end);
+    Paradigm{evt,2} = Values{pool.(catName)(end)}; % save value name  (str)
+    Paradigm{evt,3} = pool.(catName)(end);         % save value index (int)
     
     pool.(catName)(end) = [];
     
