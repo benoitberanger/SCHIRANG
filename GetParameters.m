@@ -4,6 +4,7 @@ global S
 
 if isempty(S)
     S.Environement = 'MRI';
+    S.Side         = 'Left';
 end
 
 
@@ -54,7 +55,7 @@ Parameters.Video.ScreenBackgroundColor = [170 170 170]; % [R G B] ( from 0 to 25
 Parameters.Text.SizeRatio   = 0.10; % Size = ScreenWide *ratio
 Parameters.Text.Font        = 'Arial';
 Parameters.Text.Color       = [128 128 128]; % [R G B] ( from 0 to 255 )
-
+Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 
 %%%%%%%%%%%%
 %   CEIL    %
@@ -72,17 +73,26 @@ Parameters.CEIL.Images.Categories = {
 Parameters.CEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
 Parameters.CEIL.Images.Values = sort(Parameters.CEIL.Images.Values); % need to sort : files names will be sorted
 
+switch S.Side
+    case 'Left'
+        YesX = 1/4;
+        NoX  = 3/4;
+    case 'Right'
+        YesX = 3/4;
+        NoX  = 1/4;
+end
+
 Parameters.CEIL.Yes     .Content       = 'Oui';
-Parameters.CEIL.Yes     .PositonXRatio = 1/4; % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.Yes     .PositonYRatio = 2/3; % Ypos = PositonYRatio * ScreenHight
+Parameters.CEIL.Yes     .PositonXRatio = YesX; % Xpos = PositonXRatio * ScreenWidth
+Parameters.CEIL.Yes     .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
 
 Parameters.CEIL.No      .Content       = 'Non';
-Parameters.CEIL.No      .PositonXRatio = 3/4; % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.No      .PositonYRatio = 2/3; % Ypos = PositonYRatio * ScreenHight
+Parameters.CEIL.No      .PositonXRatio = NoX;  % Xpos = PositonXRatio * ScreenWidth
+Parameters.CEIL.No      .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
 
 Parameters.CEIL.Question.Content       = 'Est-ce vous ?';
-Parameters.CEIL.Question.PositonXRatio = 0.5; % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.Question.PositonYRatio = 1/3; % Ypos = PositonYRatio * ScreenHight
+Parameters.CEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * ScreenWidth
+Parameters.CEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
 
 %%%%%%%%%%%%%%
 %   RECOG    %
@@ -100,7 +110,6 @@ Parameters.RECOG.FixationCross.Color          = [128 128 128]; % [R G B] ( from 
 
 KbName('UnifyKeyNames');
 
-
 Parameters.Keybinds.TTL_t_ASCII          = KbName('t'); % MRI trigger has to be the first defined key
 % Parameters.Keybinds.emulTTL_s_ASCII      = KbName('s');
 Parameters.Keybinds.Stop_Escape_ASCII    = KbName('ESCAPE');
@@ -109,36 +118,29 @@ switch S.Environement
     
     case 'MRI'
         
-        Parameters.Fingers.Right(1) = 1;           % Thumb, not on the response buttons, arbitrary number
-        Parameters.Fingers.Right(2) = KbName('b'); % Index finger
-        Parameters.Fingers.Right(3) = KbName('y'); % Middle finger
-        Parameters.Fingers.Right(4) = KbName('g'); % Ring finger
-        Parameters.Fingers.Right(5) = KbName('r'); % Little finger
-        
-        Parameters.Fingers.Left (1) = 2;           % Thumb, not on the response buttons, arbitrary number
-        Parameters.Fingers.Left (2) = KbName('e'); % Index finger
-        Parameters.Fingers.Left (3) = KbName('z'); % Middle finger
-        Parameters.Fingers.Left (4) = KbName('n'); % Ring finger
-        Parameters.Fingers.Left (5) = KbName('d'); % Little finger
+        switch S.Side
+            case 'Left'
+                Parameters.Fingers.Yes = KbName('b');
+                Parameters.Fingers.No  = KbName('y');
+            case 'Right'
+                Parameters.Fingers.Yes = KbName('y');
+                Parameters.Fingers.No  = KbName('b');
+        end
         
     case 'Practice'
         
-        Parameters.Fingers.Left (1) = KbName('v'); % Thumb, not on the response buttons, arbitrary number
-        Parameters.Fingers.Left (2) = KbName('f'); % Index finger
-        Parameters.Fingers.Left (3) = KbName('d'); % Middle finger
-        Parameters.Fingers.Left (4) = KbName('s'); % Ring finger
-        Parameters.Fingers.Left (5) = KbName('q'); % Little finger
-        
-        Parameters.Fingers.Right(1) = KbName('b'); % Thumb, not on the response buttons, arbitrary number
-        Parameters.Fingers.Right(2) = KbName('h'); % Index finger
-        Parameters.Fingers.Right(3) = KbName('j'); % Middle finger
-        Parameters.Fingers.Right(4) = KbName('k'); % Ring finger
-        Parameters.Fingers.Right(5) = KbName('l'); % Little finger
+        switch S.Side
+            case 'Left'
+                Parameters.Fingers.Yes = KbName('LeftArrow' );
+                Parameters.Fingers.No  = KbName('RightArrow');
+            case 'Right'
+                Parameters.Fingers.Yes = KbName('RightArrow');
+                Parameters.Fingers.No  = KbName('LeftArrow' );
+        end
         
 end
 
-Parameters.Fingers.All      = [fliplr(Parameters.Fingers.Left) Parameters.Fingers.Right];
-Parameters.Fingers.Names    = {'L5' 'L4' 'L3' 'L2' 'L1' 'R1' 'R2' 'R3' 'R4' 'R5'};
+Parameters.Fingers.Names = {'Yes' 'No'};
 
 
 %% Echo in command window

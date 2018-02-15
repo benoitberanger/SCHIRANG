@@ -75,7 +75,7 @@ try
                 ER.AddEvent({eventName lastFlipOnset-StartTime []})
                 RR.AddEvent({['Jitter__' eventName] lastFlipOnset-StartTime [] []})
                 
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + EP.Get('jitter',evt) - S.PTB.slack;
                 while 1
                     % Fetch keys
@@ -94,7 +94,7 @@ try
                 if EXIT
                     break
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
                 %% ~~~ Step 2 : Blank screen ~~~
@@ -103,7 +103,7 @@ try
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 RR.AddEvent({['Blank__' eventName] lastFlipOnset-StartTime [] []})
                 
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + Parameters.Blank - S.PTB.slack;
                 while 1
                     % Fetch keys
@@ -122,7 +122,7 @@ try
                 if EXIT
                     break
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
                 %% ~~~ Step 3 : Picture ~~~
@@ -135,7 +135,7 @@ try
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 RR.AddEvent({['Picture__' eventName] lastFlipOnset-StartTime [] []})
                 
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + Parameters.DisplayPicture - S.PTB.slack;
                 while 1
                     % Fetch keys
@@ -154,7 +154,7 @@ try
                 if EXIT
                     break
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 
                 
                 %% ~~~ Step 4 : Answer ~~~
@@ -166,26 +166,46 @@ try
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
                 RR.AddEvent({['Answer__' eventName] lastFlipOnset-StartTime [] []})
                 
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 when = lastFlipOnset + Parameters.Answer - S.PTB.slack;
                 while 1
+                    
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
+                    
                     if keyIsDown
+                        
+                        if keyCode(S.Parameters.Fingers.Yes) % YES
+                            Yes.color = S.Parameters.Text.ClickCorlor;
+                            Yes.Draw
+                            Screen('DrawingFinished',S.PTB.wPtr);
+                            Screen('Flip', S.PTB.wPtr);
+                        elseif keyCode(S.Parameters.Fingers.No) % NO
+                            No.color  = S.Parameters.Text.ClickCorlor;
+                            No.Draw
+                            Screen('DrawingFinished',S.PTB.wPtr);
+                            Screen('Flip', S.PTB.wPtr);
+                        end
+                        
                         % ~~~ ESCAPE key ? ~~~
                         [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
                         if EXIT
                             break
                         end
+                        
                     end
+                    
                     if secs >= when
                         break
                     end
-                end
+                    
+                end % while
+                
                 if EXIT
                     break
                 end
-                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                Yes.color = S.Parameters.Text.Color;
+                No .color = S.Parameters.Text.Color;
                 
                 
         end % switch
