@@ -63,7 +63,7 @@ try
                 ShowCursor;
                 Priority( 0 );
                 
-            otherwise % --------------------------------
+            otherwise % ---------------------------------------------------
                 %% ~~~ Step 1 : Jitter between trials ~~~
                 
                 Cross.Draw

@@ -77,21 +77,15 @@ end
 
 %% Diagnotic
 
-switch S.Task
+switch S.OperationMode
     
-    case 'SEQ'
+    case 'Acquisition'
         
-        switch S.OperationMode
-            
-            case 'Acquisition'
-                
-            case 'FastDebug'
-                plotDelay(EP,ER)
-                
-            case 'RealisticDebug'
-                plotDelay(EP,ER)
-                
-        end
+    case 'FastDebug'
+        plotDelay(EP,ER)
+        
+    case 'RealisticDebug'
+        plotDelay(EP,ER)
         
 end
 
