@@ -13,7 +13,7 @@ try
     
     %% Prepare event record and keybinf logger
     
-    [ ER, RR, KL ] = Common.PrepareRecorders( EP );
+    [ ER, RR, KL, BR ] = Common.PrepareRecorders( EP );
     
     
     %% Prepare objects
@@ -39,7 +39,10 @@ try
         
         Common.CommandWindowDisplay( EP, evt );
         
-        eventName = EP.Get('name',evt);
+        eventName     = EP.Get('name'    ,evt);
+        eventCategory = EP.Get('Category',evt);
+        eventValue    = EP.Get('Value'   ,evt);
+        eventValueIDX = EP.Get('index'   ,evt);
         
         switch eventName
             
@@ -128,7 +131,7 @@ try
                 %% ~~~ Step 3 : Picture ~~~
                 
                 % Image selector
-                currentImage = imgObj.(EP.Get('Category',evt)){EP.Get('index',evt)};
+                currentImage = imgObj.(eventCategory){eventValueIDX};
                 fprintf('%s \n',currentImage.filename)
                 currentImage.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
@@ -167,6 +170,7 @@ try
                 RR.AddEvent({['Answer__' eventName] lastFlipOnset-StartTime [] []})
                 
                 when = lastFlipOnset + Parameters.Answer - S.PTB.slack;
+                has_clicked = 0;
                 while 1
                     
                     % Fetch keys
@@ -174,16 +178,22 @@ try
                     
                     if keyIsDown
                         
-                        if keyCode(S.Parameters.Fingers.Yes) % YES
-                            Yes.color = S.Parameters.Text.ClickCorlor;
-                            Yes.Draw
-                            Screen('DrawingFinished',S.PTB.wPtr);
-                            Screen('Flip', S.PTB.wPtr);
-                        elseif keyCode(S.Parameters.Fingers.No) % NO
-                            No.color  = S.Parameters.Text.ClickCorlor;
-                            No.Draw
-                            Screen('DrawingFinished',S.PTB.wPtr);
-                            Screen('Flip', S.PTB.wPtr);
+                        if ~has_clicked
+                            if keyCode(S.Parameters.Fingers.Yes) % YES
+                                Yes.color = S.Parameters.Text.ClickCorlor;
+                                Yes.Draw
+                                Screen('DrawingFinished',S.PTB.wPtr);
+                                Screen('Flip', S.PTB.wPtr);
+                                BR.AddEvent({eventName eventCategory eventValue 1 0 0 round((secs-lastFlipOnset)*1000)})
+                                has_clicked = 1;
+                            elseif keyCode(S.Parameters.Fingers.No) % NO
+                                No.color  = S.Parameters.Text.ClickCorlor;
+                                No.Draw
+                                Screen('DrawingFinished',S.PTB.wPtr);
+                                Screen('Flip', S.PTB.wPtr);
+                                BR.AddEvent({eventName eventCategory eventValue 0 1 0 round((secs-lastFlipOnset)*1000)})
+                                has_clicked = 1;
+                            end
                         end
                         
                         % ~~~ ESCAPE key ? ~~~
@@ -207,6 +217,10 @@ try
                 Yes.color = S.Parameters.Text.Color;
                 No .color = S.Parameters.Text.Color;
                 
+                if ~has_clicked
+                    BR.AddEvent({eventName eventCategory eventValue 0 0 1 -1})
+                end
+                
                 
         end % switch
         
@@ -222,6 +236,11 @@ try
     
     TaskData = Common.EndOfStimulation( TaskData, EP, ER, RR, KL, StartTime, StopTime );
     TaskData.Parameters = Parameters;
+    
+    % Behaviour recordings
+    BR.ClearEmptyEvents;
+    TaskData.BR = BR;
+    assignin('base','BR',BR)
     
     
 catch err

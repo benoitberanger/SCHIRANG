@@ -1,4 +1,4 @@
-function [ ER, RR, KL] = PrepareRecorders( EP )
+function [ ER, RR, KL, BR] = PrepareRecorders( EP )
 global S
 
 %% Prepare event record
@@ -23,6 +23,13 @@ RR = EventRecorder( { 'event_name' , 'onset(s)' , 'duration(s)' , 'content' } , 
 
 % Prepare
 RR.AddStartTime( 'StartTime' , 0 );
+
+
+%% Behaviour recorder
+
+% Create
+BR = EventRecorder( { 'event_name' , 'category' , 'value' , 'yes' , 'no' , 'missed' , 'ReactionTime (ms)' } , EP.EventCount ); % high arbitrary value : preallocation of memory
+
 
 %% Prepare the logger of MRI triggers
 
