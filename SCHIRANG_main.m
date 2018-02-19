@@ -233,9 +233,9 @@ switch get(get(handles.uipanel_EyelinkMode,'SelectedObject'),'Tag')
             case 'EyelinkCalibration'
                 task = 'E'; % don't care...
             case 'DetectCEIL'
-                task = 'C';
-            case 'AroundDetectCEIL'
-                task = 'R';
+                task = 'D';
+            case 'AroundCEIL'
+                task = 'A';
             otherwise
                 error('SCHIRANG:Task','Task ?')
         end
@@ -307,8 +307,8 @@ switch Task
     case 'DetectCEIL'
         TaskData = DetectCEIL.Task;
         
-    case 'AroundDetectCEIL'
-        TaskData = AroundDetectCEIL.Task;
+    case 'AroundCEIL'
+        TaskData = DetectCEIL.Task;
         
     case 'EyelinkCalibration'
         Eyelink.Calibration(S.PTB.wPtr);
