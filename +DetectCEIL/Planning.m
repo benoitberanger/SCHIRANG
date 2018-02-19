@@ -1,11 +1,15 @@
 function [ EP, Parameters ] = Planning
 global S
 
-if nargout < 1 % only to plot the paradigme when we execute the function outside of the main script
+if isempty(S) % only to plot the paradigme when we execute the function outside of the main script
     S.Environement    = 'MRI';
     S.OperationMode   = 'Acquisition';
+    %     S.OperationMode   = 'FastDebug';
+    %     S.OperationMode   = 'RealisticDebug';
+    S.Side            = 'Left';
     S.Parameters      = GetParameters;
     S.Task            = 'DetectCEIL';
+    %     S.Task            = 'AroundCEIL';
 end
 
 
@@ -23,21 +27,36 @@ switch S.OperationMode
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 2.0; % seconds
         Parameters.Answer                = 3.0; % seconds
-        Parameters.RepetitionFactor      = 5;
+        switch S.Task
+            case 'DetectCEIL'
+                Parameters.RepetitionFactor = 1;
+            case 'AroundCEIL'
+                Parameters.RepetitionFactor = 5;
+        end
     case 'FastDebug'
         Parameters.MinPauseBetweenTrials = 0.2; % seconds
         Parameters.MaxPauseBetweenTrials = 0.5; % seconds
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 0.5; % seconds
         Parameters.Answer                = 0.5; % seconds
-        Parameters.RepetitionFactor      = 1;
+        switch S.Task
+            case 'DetectCEIL'
+                Parameters.RepetitionFactor = 1;
+            case 'AroundCEIL'
+                Parameters.RepetitionFactor = 1;
+        end
     case 'RealisticDebug'
         Parameters.MinPauseBetweenTrials = 4.0; % seconds
         Parameters.MaxPauseBetweenTrials = 6.0; % seconds
         Parameters.Blank                 = 0.5; % seconds
         Parameters.DisplayPicture        = 2.0; % seconds
         Parameters.Answer                = 3.0; % seconds
-        Parameters.RepetitionFactor      = 1;
+        switch S.Task
+            case 'DetectCEIL'
+                Parameters.RepetitionFactor = 1;
+            case 'AroundCEIL'
+                Parameters.RepetitionFactor = 5;
+        end
 end
 
 
@@ -51,13 +70,28 @@ Paradigm = cell(nrCategories*nrValues*Parameters.RepetitionFactor,3);
 nrEvents = size(Paradigm,1);
 
 nrEventsPerCondition = nrValues*Parameters.RepetitionFactor;
-switch S.OperationMode
-    case 'Acquisition'
-        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, 5                    );
-    case 'FastDebug'
-        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition                       );
-    case 'RealisticDebug'
-        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, nrEventsPerCondition );
+switch S.Task
+    
+    case 'DetectCEIL'
+        switch S.OperationMode
+            case 'Acquisition'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition                       );
+            case 'FastDebug'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition                       );
+            case 'RealisticDebug'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition                       );
+        end
+        
+    case 'AroundCEIL'
+        switch S.OperationMode
+            case 'Acquisition'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, 5                    );
+            case 'FastDebug'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition                       );
+            case 'RealisticDebug'
+                [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, nrEventsPerCondition );
+        end
+        
 end
 
 pool = struct;
