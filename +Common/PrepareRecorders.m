@@ -5,11 +5,10 @@ global S
 
 % Create
 switch S.Task
-    case 'CEIL'
+    case 'DetectCEIL'
         ER = EventRecorder( EP.Header(1:3) , EP.EventCount );
-    case 'RECOG'
+    case 'AroundCEIL'
         ER = EventRecorder( EP.Header(1:3) , EP.EventCount );
-    case 'EyelinkCalibration'
 end
 
 % Prepare

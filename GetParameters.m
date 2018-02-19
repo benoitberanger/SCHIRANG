@@ -58,20 +58,20 @@ Parameters.Text.Color       = [128 128 128]; % [R G B] ( from 0 to 255 )
 Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 
 %%%%%%%%%%%%
-%   CEIL    %
+%   DetectCEIL    %
 %%%%%%%%%%%%
 
 % Fixation cross
-Parameters.CEIL.FixationCross.ScreenRatio    = 0.10;          % ratio : dim   = ScreenWide *ratio_screen
-Parameters.CEIL.FixationCross.lineWidthRatio = 0.05;          % ratio : width = dim        *ratio_width
-Parameters.CEIL.FixationCross.Color          = [128 128 128]; % [R G B] ( from 0 to 255 )
+Parameters.DetectCEIL.FixationCross.ScreenRatio    = 0.10;          % ratio : dim   = ScreenWide *ratio_screen
+Parameters.DetectCEIL.FixationCross.lineWidthRatio = 0.05;          % ratio : width = dim        *ratio_width
+Parameters.DetectCEIL.FixationCross.Color          = [128 128 128]; % [R G B] ( from 0 to 255 )
 
-Parameters.CEIL.Images.Categories = {
+Parameters.DetectCEIL.Images.Categories = {
     's' 'k' % sVSk, condition 1
     's' 'u' % sVSu, condition 2
     };
-Parameters.CEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
-Parameters.CEIL.Images.Values = sort(Parameters.CEIL.Images.Values); % need to sort : files names will be sorted
+Parameters.DetectCEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
+Parameters.DetectCEIL.Images.Values = sort(Parameters.DetectCEIL.Images.Values); % need to sort : files names will be sorted
 
 switch S.Side
     case 'Left'
@@ -82,17 +82,17 @@ switch S.Side
         NoX  = 1/4;
 end
 
-Parameters.CEIL.Yes     .Content       = 'Oui';
-Parameters.CEIL.Yes     .PositonXRatio = YesX; % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.Yes     .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
+Parameters.DetectCEIL.Yes     .Content       = 'Oui';
+Parameters.DetectCEIL.Yes     .PositonXRatio = YesX; % Xpos = PositonXRatio * ScreenWidth
+Parameters.DetectCEIL.Yes     .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
 
-Parameters.CEIL.No      .Content       = 'Non';
-Parameters.CEIL.No      .PositonXRatio = NoX;  % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.No      .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
+Parameters.DetectCEIL.No      .Content       = 'Non';
+Parameters.DetectCEIL.No      .PositonXRatio = NoX;  % Xpos = PositonXRatio * ScreenWidth
+Parameters.DetectCEIL.No      .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
 
-Parameters.CEIL.Question.Content       = 'Est-ce vous ?';
-Parameters.CEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * ScreenWidth
-Parameters.CEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
+Parameters.DetectCEIL.Question.Content       = 'Est-ce vous ?';
+Parameters.DetectCEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * ScreenWidth
+Parameters.DetectCEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
 
 %%%%%%%%%%%%%%
 %   RECOG    %

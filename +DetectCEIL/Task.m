@@ -4,7 +4,7 @@ global S
 try
     %% Tunning of the task
     
-    [ EP, Parameters ] = CEIL.Planning;
+    [ EP, Parameters ] = DetectCEIL.Planning;
     
     % End of preparations
     EP.BuildGraph;
@@ -18,10 +18,10 @@ try
     
     %% Prepare objects
     
-    Cross  = CEIL.Prepare.Cross;
-    imgObj = CEIL.Prepare.Image;
+    Cross  = DetectCEIL.Prepare.Cross;
+    imgObj = DetectCEIL.Prepare.Image;
     
-    [ Yes, No, Question ] = CEIL.Prepare.Texts;
+    [ Yes, No, Question ] = DetectCEIL.Prepare.Texts;
     
     
     %% Eyelink

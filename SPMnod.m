@@ -11,12 +11,12 @@ try
     % 'names' for SPM
     switch S.Task
         
-        case 'CEIL'
+        case 'DetectCEIL'
             names = {
                 ''
                 };
             
-        case 'RECOG'
+        case 'AroundCEIL'
             names = {
                 ''
                 };

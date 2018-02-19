@@ -6,7 +6,7 @@ global S
 imgObj = struct;
 allObj = Image.empty; % create empty aray of object, this array is just for convenience
 
-CatValDATA   = CEIL.Prepare.CheckImagesDir(S.SubjectID); % condition x modulator structure
+CatValDATA   = DetectCEIL.Prepare.CheckImagesDir(S.SubjectID); % condition x modulator structure
 S.CatValDATA = CatValDATA;
 
 baseRect = zeros(length(CatValDATA.nameCategory)*length(CatValDATA.Values),4); % to store all images sizes

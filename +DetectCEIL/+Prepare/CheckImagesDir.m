@@ -8,8 +8,8 @@ out = struct;
 
 %% Parameters
 
-Categories = S.Parameters.CEIL.Images.Categories;
-Values     = S.Parameters.CEIL.Images.Values;
+Categories = S.Parameters.DetectCEIL.Images.Categories;
+Values     = S.Parameters.DetectCEIL.Images.Values;
 
 nrCategories = size(Categories,1);
 nrValues     = length(Values);

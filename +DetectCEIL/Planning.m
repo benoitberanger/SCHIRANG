@@ -5,11 +5,11 @@ if nargout < 1 % only to plot the paradigme when we execute the function outside
     S.Environement    = 'MRI';
     S.OperationMode   = 'Acquisition';
     S.Parameters      = GetParameters;
-    S.Task            = 'CEIL';
+    S.Task            = 'DetectCEIL';
 end
 
 
-%% Paradigme
+%% Paradigme/mnt/data/benoit/Protocol/SCHIRANG/code
 % Each picture has to be presented in each run.
 % Each picture will be presented the same number of times (1x each, 2x each, ...)
 % So the only parameter is this repetition factor : x1, x2, x3, ...

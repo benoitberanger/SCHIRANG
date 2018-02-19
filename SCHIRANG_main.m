@@ -36,11 +36,11 @@ S.TimeStampFile = datestr(now, 30                ); % to sort automatically by t
 
 switch get(hObject,'Tag')
     
-    case 'pushbutton_CEIL'
-        Task = 'CEIL';
+    case 'pushbutton_DetectCEIL'
+        Task = 'DetectCEIL';
         
-    case 'pushbutton_RECOG'
-        Task = 'RECOG';
+    case 'pushbutton_AroundDetectCEIL'
+        Task = 'AroundDetectCEIL';
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';
@@ -232,9 +232,9 @@ switch get(get(handles.uipanel_EyelinkMode,'SelectedObject'),'Tag')
         switch Task
             case 'EyelinkCalibration'
                 task = 'E'; % don't care...
-            case 'CEIL'
+            case 'DetectCEIL'
                 task = 'C';
-            case 'RECOG'
+            case 'AroundDetectCEIL'
                 task = 'R';
             otherwise
                 error('SCHIRANG:Task','Task ?')
@@ -304,11 +304,11 @@ EchoStart(Task)
 
 switch Task
     
-    case 'CEIL'
-        TaskData = CEIL.Task;
+    case 'DetectCEIL'
+        TaskData = DetectCEIL.Task;
         
-    case 'RECOG'
-        TaskData = RECOG.Task;
+    case 'AroundDetectCEIL'
+        TaskData = AroundDetectCEIL.Task;
         
     case 'EyelinkCalibration'
         Eyelink.Calibration(S.PTB.wPtr);
@@ -386,9 +386,9 @@ set(handles.text_LastFileNameAnnouncer, 'Visible','on'                          
 set(handles.text_LastFileName         , 'Visible','on'                             )
 set(handles.text_LastFileName         , 'String' , DataFile(length(DataPath)+1:end))
 
-if strcmp(Task,'CEIL')
+if strcmp(Task,'DetectCEIL')
     disp(S.TaskData.BR.Data)
-elseif strcmp(Task,'RECOG')
+elseif strcmp(Task,'AroundDetectCEIL')
     
 end
 
