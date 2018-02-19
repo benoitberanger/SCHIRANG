@@ -19,7 +19,7 @@ try
     %% Prepare objects
     
     Cross  = DetectCEIL.Prepare.Cross;
-    imgObj = DetectCEIL.Prepare.Image;
+    [ CatValImg , imageArray ]= DetectCEIL.Prepare.Image;
     
     [ Yes, No, Question ] = DetectCEIL.Prepare.Texts;
     
@@ -79,7 +79,8 @@ try
                 RR.AddEvent({['Jitter__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                when = lastFlipOnset + EP.Get('jitter',evt) - S.PTB.slack;
+                % when = lastFlipOnset + EP.Get('jitter',evt) - S.PTB.slack;
+                when = StartTime + EP.Get('onset',evt) + EP.Get('jitter',evt) - S.PTB.slack; % more accurate : conpensate the delay introduced by the machine/screen
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
@@ -131,7 +132,7 @@ try
                 %% ~~~ Step 3 : Picture ~~~
                 
                 % Image selector
-                currentImage = imgObj.(eventCategory){eventValueIDX};
+                currentImage = CatValImg.(eventCategory){eventValueIDX};
                 fprintf('%s \n',currentImage.filename)
                 currentImage.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
@@ -241,6 +242,9 @@ try
     BR.ClearEmptyEvents;
     TaskData.BR = BR;
     assignin('base','BR',BR)
+    
+    % Close all PTB textures
+    Screen('Close', [imageArray.texPtr])
     
     
 catch err

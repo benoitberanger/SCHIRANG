@@ -1,10 +1,10 @@
-function [ imgObj ] = Image
+function [ CatValImg, imageArray ] = Image
 global S
 
 %% Prepare
 
-imgObj = struct;
-allObj = Image.empty; % create empty aray of object, this array is just for convenience
+CatValImg = struct;
+imageArray = Image.empty; % create empty aray of object, this array is just for convenience
 
 CatValDATA   = CheckImagesDir( S.SubjectID , S.Task ); % condition x modulator structure
 S.CatValDATA = CatValDATA;
@@ -36,8 +36,8 @@ for c = 1 : length(CatValDATA.nameCategory)
         
         % currentObject.AssertReady; % just to check
         
-        imgObj.(nameCat){v} = currentObject; % store object in formated structure
-        allObj(counter)     = currentObject; % store object very simply, for latter user
+        CatValImg.(nameCat){v} = currentObject; % store object in formated structure
+        imageArray(counter)     = currentObject; % store object very simply, for latter user
         
         baseRect(counter,:) = currentObject.baseRect; % store image size
         
@@ -58,8 +58,8 @@ maxRatio = max([ratioX;ratioY]);
 
 if maxRatio > 1 % image bigger than the screen
     shrinkRation = 1/maxRatio;
-    for img = 1 : length(allObj)
-        allObj(img).Rescale(shrinkRation); % shrink all images with the same factor
+    for idx = 1 : length(imageArray)
+        imageArray(idx).Rescale(shrinkRation); % shrink all images with the same factor
     end
 else
     % nothing to do, all images will fit the screen

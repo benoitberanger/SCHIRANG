@@ -4,12 +4,15 @@ global S
 if isempty(S) % only to plot the paradigme when we execute the function outside of the main script
     S.Environement    = 'MRI';
     S.OperationMode   = 'Acquisition';
+    S.PTB.FPS         = 60;
+    
     %     S.OperationMode   = 'FastDebug';
     %     S.OperationMode   = 'RealisticDebug';
     S.Side            = 'Left';
     S.Parameters      = GetParameters;
     S.Task            = 'DetectCEIL';
     %     S.Task            = 'AroundCEIL';
+    
 end
 
 
@@ -146,7 +149,8 @@ EP.AddStartTime('StartTime', 0);
 % --- Stim ----------------------------------------------------------------
 
 for evt = 1 : nrEvents
-    jitter = Parameters.MinPauseBetweenTrials + (Parameters.MaxPauseBetweenTrials-Parameters.MinPauseBetweenTrials)*rand;
+    jitter = Parameters.MinPauseBetweenTrials + (Parameters.MaxPauseBetweenTrials-Parameters.MinPauseBetweenTrials)*rand; % seconds
+    jitter = round(jitter*S.PTB.FPS)/S.PTB.FPS; % still seconds but it is rounded toward an integer number of frames
     duration = jitter + Parameters.Blank + Parameters.DisplayPicture + Parameters.Answer;
     EP.AddEvent({[Paradigm{evt,1} Paradigm{evt,2}] NextOnset(EP) duration jitter Paradigm{evt,1} Paradigm{evt,2} Paradigm{evt,3}});
 end
