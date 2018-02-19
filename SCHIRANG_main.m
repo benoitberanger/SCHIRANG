@@ -39,8 +39,8 @@ switch get(hObject,'Tag')
     case 'pushbutton_DetectCEIL'
         Task = 'DetectCEIL';
         
-    case 'pushbutton_AroundDetectCEIL'
-        Task = 'AroundDetectCEIL';
+    case 'pushbutton_AroundCEIL'
+        Task = 'AroundCEIL';
         
     case 'pushbutton_EyelinkCalibration'
         Task = 'EyelinkCalibration';

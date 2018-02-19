@@ -602,46 +602,86 @@ else % Create the figure
     p_tk.countO = 0; % Object counter
     p_tk.xposO  = @(countO) p_tk.Ow/(p_tk.nbO+1)*countO + (countO-1)*p_tk.Ow;
     
-    buttun_y = 0.10;
-    buttun_h = 0.80;
+    buttun_y = 0.05;
+    buttun_h = 0.60;
+    
+    buttun_y_check = buttun_y + buttun_h;
+    buttun_h_check = 1-buttun_y-buttun_h;
+    
+    % ---------------------------------------------------------------------
+    % Pushbutton : Check DetectCEIL
+    
+    p_tk.countO  = p_tk.countO + 1;
+    b_check_dceil.x   = p_tk.xposO(p_tk.countO);
+    b_check_dceil.y   = buttun_y_check;
+    b_check_dceil.w   = p_tk.Ow;
+    b_check_dceil.h   = buttun_h_check;
+    b_check_dceil.tag = 'pushbutton_Check_DetectCEIL';
+    handles.(b_check_dceil.tag) = uicontrol(handles.uipanel_Task,...
+        'Style','pushbutton',...
+        'Units', 'Normalized',...
+        'Position',[b_check_dceil.x b_check_dceil.y b_check_dceil.w b_check_dceil.h],...
+        'String','Check dCEIL',...
+        'BackgroundColor',buttonBGcolor,...
+        'Tag',b_check_dceil.tag,...
+        'Callback',@CheckImages,...
+        'Tooltip','Check if all dirs and image files are present for this SubjectID');
     
     
     % ---------------------------------------------------------------------
     % Pushbutton : DetectCEIL
     
-    p_tk.countO  = p_tk.countO + 1;
-    b_ceil.x   = p_tk.xposO(p_tk.countO);
-    b_ceil.y   = buttun_y;
-    b_ceil.w   = p_tk.Ow;
-    b_ceil.h   = buttun_h;
-    b_ceil.tag = 'pushbutton_DetectCEIL';
-    handles.(b_ceil.tag) = uicontrol(handles.uipanel_Task,...
+    b_dceil.x   = p_tk.xposO(p_tk.countO);
+    b_dceil.y   = buttun_y;
+    b_dceil.w   = p_tk.Ow;
+    b_dceil.h   = buttun_h;
+    b_dceil.tag = 'pushbutton_DetectCEIL';
+    handles.(b_dceil.tag) = uicontrol(handles.uipanel_Task,...
         'Style','pushbutton',...
         'Units', 'Normalized',...
-        'Position',[b_ceil.x b_ceil.y b_ceil.w b_ceil.h],...
+        'Position',[b_dceil.x b_dceil.y b_dceil.w b_dceil.h],...
         'String','DetectCEIL',...
         'BackgroundColor',buttonBGcolor,...
-        'Tag',b_ceil.tag,...
+        'Tag',b_dceil.tag,...
         'Callback',@SCHIRANG_main,...
         'Tooltip','Show picts from 0 to +100 to sample the psychometric curve and detecet the 50% ceil');
     
     
     % ---------------------------------------------------------------------
-    % Pushbutton : AroundCEIL
+    % Pushbutton : Check AroundCEIL
     
     p_tk.countO  = p_tk.countO + 1;
-    b_recog.x   = p_tk.xposO(p_tk.countO);
-    b_recog.y   = buttun_y;
-    b_recog.w   = p_tk.Ow;
-    b_recog.h   = buttun_h;
-    b_recog.tag = 'pushbutton_AroundCEIL';
-    handles.(b_recog.tag) = uicontrol(handles.uipanel_Task,...
+    b_check_aceil.x   = p_tk.xposO(p_tk.countO);
+    b_check_aceil.y   = buttun_y_check;
+    b_check_aceil.w   = p_tk.Ow;
+    b_check_aceil.h   = buttun_h_check;
+    b_check_aceil.tag = 'pushbutton_Check_AroundCEIL';
+    handles.(b_check_aceil.tag) = uicontrol(handles.uipanel_Task,...
         'Style','pushbutton',...
         'Units', 'Normalized',...
-        'Position',[b_recog.x b_recog.y b_recog.w b_recog.h],...
+        'Position',[b_check_aceil.x b_check_aceil.y b_check_aceil.w b_check_aceil.h],...
+        'String','Check aCEIL',...
+        'BackgroundColor',buttonBGcolor,...
+        'Tag',b_check_aceil.tag,...
+        'Callback',@CheckImages,...
+        'Tooltip','Check if all dirs and image files are present for this SubjectID');
+    
+    
+    % ---------------------------------------------------------------------
+    % Pushbutton : AroundCEIL
+    
+    b_aceil.x   = p_tk.xposO(p_tk.countO);
+    b_aceil.y   = buttun_y;
+    b_aceil.w   = p_tk.Ow;
+    b_aceil.h   = buttun_h;
+    b_aceil.tag = 'pushbutton_AroundCEIL';
+    handles.(b_aceil.tag) = uicontrol(handles.uipanel_Task,...
+        'Style','pushbutton',...
+        'Units', 'Normalized',...
+        'Position',[b_aceil.x b_aceil.y b_aceil.w b_aceil.h],...
         'String','AroundCEIL',...
         'BackgroundColor',buttonBGcolor,...
-        'Tag',b_recog.tag,...
+        'Tag',b_aceil.tag,...
         'Callback',@SCHIRANG_main,...
         'Tooltip','Show pics from -20 to +20 around the 50% detection ceil');
     
@@ -803,3 +843,30 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
 end
 
 end % function
+
+
+% -------------------------------------------------------------------------
+function CheckImages( hObject, ~ )
+
+% Retrive GUI data
+handles = guidata(hObject);
+
+% SubjectID
+SubjectID = get(handles.edit_SubjectID,'String');
+assert( ~isempty(SubjectID) , 'SubjectID is required')
+
+% Task name
+switch get(hObject,'Tag')
+    case 'pushbutton_Check_DetectCEIL'
+        Task = 'DetectCEIL';
+    case 'pushbutton_Check_AroundCEIL'
+        Task = 'AroundCEIL';
+    otherwise
+            error('task name ?')
+end
+
+CheckImagesDir( SubjectID , Task )
+
+
+end % function
+

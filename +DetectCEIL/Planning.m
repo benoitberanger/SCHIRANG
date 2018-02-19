@@ -50,7 +50,15 @@ nrValues     = length(Values);
 Paradigm = cell(nrCategories*nrValues*Parameters.RepetitionFactor,3);
 nrEvents = size(Paradigm,1);
 
-[ SequenceHighLow ] = Common.Randomize01( nrEvents/2, nrEvents/2, 5 );
+nrEventsPerCondition = nrValues*Parameters.RepetitionFactor;
+switch S.OperationMode
+    case 'Acquisition'
+        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, 5 );
+    case 'FastDebug'
+        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition    );
+    case 'RealisticDebug'
+        [ SequenceHighLow ]  = Common.Randomize01( nrEventsPerCondition , nrEventsPerCondition, nrEventsPerCondition );
+end
 
 pool = struct;
 for c = 1 : nrCategories

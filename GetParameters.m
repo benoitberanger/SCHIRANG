@@ -57,21 +57,14 @@ Parameters.Text.Font        = 'Arial';
 Parameters.Text.Color       = [128 128 128]; % [R G B] ( from 0 to 255 )
 Parameters.Text.ClickCorlor = [0   255 0  ]; % [R G B] ( from 0 to 255 )
 
-%%%%%%%%%%%%
-%   DetectCEIL    %
-%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+% DetectCEIL %
+%%%%%%%%%%%%%%
 
 % Fixation cross
 Parameters.DetectCEIL.FixationCross.ScreenRatio    = 0.10;          % ratio : dim   = ScreenWide *ratio_screen
 Parameters.DetectCEIL.FixationCross.lineWidthRatio = 0.05;          % ratio : width = dim        *ratio_width
 Parameters.DetectCEIL.FixationCross.Color          = [128 128 128]; % [R G B] ( from 0 to 255 )
-
-Parameters.DetectCEIL.Images.Categories = {
-    's' 'k' % sVSk, condition 1
-    's' 'u' % sVSu, condition 2
-    };
-Parameters.DetectCEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
-Parameters.DetectCEIL.Images.Values = sort(Parameters.DetectCEIL.Images.Values); % need to sort : files names will be sorted
 
 switch S.Side
     case 'Left'
@@ -94,14 +87,25 @@ Parameters.DetectCEIL.Question.Content       = 'Est-ce vous ?';
 Parameters.DetectCEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * ScreenWidth
 Parameters.DetectCEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
 
+Parameters.DetectCEIL.Images.Categories = {
+    's' 'k' % sVSk, condition 1
+    's' 'u' % sVSu, condition 2
+    };
+
+% Task specific :
+Parameters.DetectCEIL.Images.Values = {'0' '10' '20', '30' ,'40', '50', '60', '70', '80', '90', '100'}; % modulators : 1, 2, 3, 4, 5, ...
+Parameters.DetectCEIL.Images.Values = sort(Parameters.DetectCEIL.Images.Values); % need to sort : files names will be sorted
+
+
 %%%%%%%%%%%%%%
-%   RECOG    %
+% AroundCEIL %
 %%%%%%%%%%%%%%
 
-% Fixation cross
-Parameters.RECOG.FixationCross.ScreenRatio    = 0.10;          % ratio : dim   = ScreenWide *ratio_screen
-Parameters.RECOG.FixationCross.lineWidthRatio = 0.05;          % ratio : width = dim        *ratio_width
-Parameters.RECOG.FixationCross.Color          = [128 128 128]; % [R G B] ( from 0 to 255 )
+Parameters.AroundCEIL = Parameters.DetectCEIL;
+
+% Just change the Values : thoses ones are around the detected ceil
+Parameters.AroundCEIL.Images.Values = {'-20' '-10' '0' '+10' '+20'}; % modulators : 1, 2, 3, 4, 5
+Parameters.AroundCEIL.Images.Values = sort(Parameters.AroundCEIL.Images.Values); % need to sort : files names will be sorted
 
 
 %%%%%%%%%%%%%%

@@ -4,6 +4,10 @@ if nargin < 3
     chunkSize = [];
 end
 
+if ~isempty(chunkSize) && ( mod(nr0+nr1,chunkSize)~=0 )
+    error('chunkSize must be a sub-multiple of nr0+nr1')
+end
+
 maxiter = 10000; % max value of the counter
 
 iter = 0; % counter
