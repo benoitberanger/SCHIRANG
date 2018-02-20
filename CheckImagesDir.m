@@ -54,7 +54,7 @@ out.Values     = Values;
 
 for c = 1 : nrCategories
     
-    nameCat = [Categories{c,1} 'VS' Categories{c,2}];
+    nameCat = [Categories{c,1} 'VS' Categories{c,2} Categories{c,3}];
     
     % Category
     if isdir( fullfile('..','img',SubjectID,Task,nameCat) )
@@ -62,7 +62,7 @@ for c = 1 : nrCategories
     else
         error  ('../img/%s/%s/%s ERROR : dir must exists', SubjectID , Task , nameCat )
     end
-        
+    
     out.nameCategory{c} = nameCat;
     
 end
@@ -72,7 +72,7 @@ end
 
 for c = 1 : nrCategories
     
-    nameCat = [Categories{c,1} 'VS' Categories{c,2}];
+    nameCat = [Categories{c,1} 'VS' Categories{c,2} Categories{c,3}];
     dirpath = fullfile('..','img',SubjectID,Task,nameCat);
     
     categ_dir_content = dir(dirpath);

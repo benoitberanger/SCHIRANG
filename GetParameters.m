@@ -88,8 +88,10 @@ Parameters.DetectCEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * Sc
 Parameters.DetectCEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
 
 Parameters.DetectCEIL.Images.Categories = {
-    's' 'k' % sVSk, condition 1
-    's' 'u' % sVSu, condition 2
+    's' 'k' '1' % sVSk1
+    's' 'k' '2' % sVSk2
+    's' 'u' '1' % sVSu1
+    's' 'u' '2' % sVSu2
     };
 
 % Task specific :

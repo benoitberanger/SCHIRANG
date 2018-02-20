@@ -80,7 +80,7 @@ try
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 % when = lastFlipOnset + EP.Get('jitter',evt) - S.PTB.slack;
-                when = StartTime + EP.Get('onset',evt) + EP.Get('jitter',evt) - S.PTB.slack; % more accurate : conpensate the delay introduced by the machine/screen
+                when = StartTime + EP.Get('onset',evt) + EP.Get('jitter',evt) - S.PTB.slack; % more accurate ? conpensate the delay introduced by the machine
                 while 1
                     % Fetch keys
                     [keyIsDown, secs, keyCode] = KbCheck;
