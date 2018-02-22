@@ -1,7 +1,7 @@
-function [ EP, Parameters ] = Planning
-global S
+function [ EP, Parameters ] = Planning( S )
 
-if isempty(S) % only to plot the paradigme when we execute the function outside of the main script
+
+if nargin < 1 % only to plot the paradigme when we execute the function outside of the main script
     S.PTB.FPS         = 60;
     S.Side            = 'Left';
     S.Environement    = 'MRI';

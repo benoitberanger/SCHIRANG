@@ -4,7 +4,7 @@ global S
 try
     %% Tunning of the task
     
-    [ EP, Parameters ] = DetectCEIL.Planning;
+    [ EP, Parameters ] = DetectCEIL.Planning( S );
     
     % End of preparations
     EP.BuildGraph;
