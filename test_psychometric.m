@@ -4,8 +4,10 @@ close all
 clear
 clc
 
-load /mnt/data/benoit/protocol/SCHIRANG/data/001/20180605T170212_001_Practice_DetectCEIL_run02.mat
+% load /mnt/data/benoit/protocol/SCHIRANG/data/001/20180605T170212_001_Practice_DetectCEIL_run02.mat
+[filename, pathname] = uigetfile('*.mat','MAT-files (*.mat)');
 
+load([pathname filename])
 
 %% Shortcuts
 
@@ -60,7 +62,7 @@ for c = 1 : nrCat
     subplot(1,2,c)
     plot(Values,s.(cat).valueProbalility,'LineStyle','-','Marker','s','MarkerEdgeColor','red','MarkerFaceColor','red')
     title(cat)
-    xticks(0:5:100)
+%     xticks(0:5:100)
     
 %     [phat,pci] = gamfit(Values, s.(cat).valueProbalility)
     
