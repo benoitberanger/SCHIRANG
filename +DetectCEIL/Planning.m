@@ -11,8 +11,8 @@ if nargin < 1 % only to plot the paradigme when we execute the function outside 
     %     S.OperationMode   = 'FastDebug';
     %     S.OperationMode   = 'RealisticDebug';
     
-    S.Task            = 'DetectCEIL';
-    %     S.Task            = 'AroundCEIL';
+%     S.Task            = 'DetectCEIL';
+        S.Task            = 'AroundCEIL';
     
 end
 
@@ -35,7 +35,7 @@ switch S.OperationMode
             case 'DetectCEIL'
                 Parameters.RepetitionFactor = 3;
             case 'AroundCEIL'
-                Parameters.RepetitionFactor = 1;
+                Parameters.RepetitionFactor = 3;
         end
     case 'FastDebug'
         Parameters.MinPauseBetweenTrials = 0.2; % seconds

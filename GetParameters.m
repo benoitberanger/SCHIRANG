@@ -95,7 +95,7 @@ Parameters.DetectCEIL.Images.Categories = {
     };
 
 % Task specific :
-Parameters.DetectCEIL.Images.Values = {'0' '10' '20', '30' ,'40', '50', '60', '70', '80', '90', '100'}; % modulators : 1, 2, 3, 4, 5, ...
+Parameters.DetectCEIL.Images.Values = {'0', '35', '45', '55', '65', '100'}; % modulators : 1, 2, 3, 4, 5, ...
 Parameters.DetectCEIL.Images.Values = sort(Parameters.DetectCEIL.Images.Values); % need to sort : files names will be sorted
 
 
