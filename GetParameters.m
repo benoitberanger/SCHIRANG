@@ -83,7 +83,7 @@ Parameters.DetectCEIL.No      .Content       = 'Non';
 Parameters.DetectCEIL.No      .PositonXRatio = NoX;  % Xpos = PositonXRatio * ScreenWidth
 Parameters.DetectCEIL.No      .PositonYRatio = 2/3;  % Ypos = PositonYRatio * ScreenHight
 
-Parameters.DetectCEIL.Question.Content       = 'Y-a-t''il de vous dans cette photo ?';
+Parameters.DetectCEIL.Question.Content       = 'Y-a-t''il de vous\ndans cette photo ?';
 Parameters.DetectCEIL.Question.PositonXRatio = 0.5;  % Xpos = PositonXRatio * ScreenWidth
 Parameters.DetectCEIL.Question.PositonYRatio = 1/3;  % Ypos = PositonYRatio * ScreenHight
 
