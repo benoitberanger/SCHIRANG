@@ -36,6 +36,7 @@ switch S.OperationMode
                 Parameters.RepetitionFactor = 3;
             case 'AroundCEIL'
                 Parameters.RepetitionFactor = 3;
+                Parameters.CrossDuration    = 10;
         end
     case 'FastDebug'
         Parameters.MinPauseBetweenTrials = 0.2; % seconds
@@ -48,6 +49,7 @@ switch S.OperationMode
                 Parameters.RepetitionFactor = 1;
             case 'AroundCEIL'
                 Parameters.RepetitionFactor = 1;
+                Parameters.CrossDuration    = 0.5;
         end
     case 'RealisticDebug'
         Parameters.MinPauseBetweenTrials = 4.0; % seconds
@@ -60,6 +62,7 @@ switch S.OperationMode
                 Parameters.RepetitionFactor = 1;
             case 'AroundCEIL'
                 Parameters.RepetitionFactor = 1;
+                Parameters.CrossDuration    = 1;
         end
 end
 
@@ -137,6 +140,12 @@ EP.AddStartTime('StartTime', 0);
 
 % --- Stim ----------------------------------------------------------------
 
+switch S.Task
+    case 'DetectCEIL'
+    case 'AroundCEIL'
+        EP.AddEvent({'FixationCross' NextOnset(EP) Parameters.CrossDuration [] [] [] []});
+end
+
 for evt = 1 : nrEvents
     jitter = Parameters.MinPauseBetweenTrials + (Parameters.MaxPauseBetweenTrials-Parameters.MinPauseBetweenTrials)*rand; % seconds
     jitter = round(jitter*S.PTB.FPS)/S.PTB.FPS; % still seconds but it is rounded toward an integer number of frames
@@ -144,6 +153,12 @@ for evt = 1 : nrEvents
     duration = jitter + Parameters.Blank + Parameters.DisplayPicture + Parameters.Answer;
     
     EP.AddEvent({[Paradigm{evt,1} '_' Paradigm{evt,2}] NextOnset(EP) duration jitter Paradigm{evt,1} Paradigm{evt,2} Paradigm{evt,3}});
+end
+
+switch S.Task
+    case 'DetectCEIL'
+    case 'AroundCEIL'
+        EP.AddEvent({'FixationCross' NextOnset(EP) Parameters.CrossDuration [] [] [] []});
 end
 
 % --- Stop ----------------------------------------------------------------

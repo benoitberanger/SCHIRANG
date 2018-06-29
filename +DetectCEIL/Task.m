@@ -68,6 +68,40 @@ try
                 ShowCursor;
                 Priority( 0 );
                 
+            case 'FixationCross'
+                
+                fprintf( 'Cross : %gs \n' , Parameters.CrossDuration )
+                
+                Cross.Draw
+                Screen('DrawingFinished',S.PTB.wPtr);
+                lastFlipOnset = Screen('Flip',S.PTB.wPtr, StartTime + EP.Data{evt,2} - S.PTB.slack);
+                
+                ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime []});
+                RR.AddEvent({'FixationCross' lastFlipOnset-StartTime [] []})
+                
+                when = lastFlipOnset + Parameters.CrossDuration - S.PTB.slack;
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                secs = lastFlipOnset;
+                while secs < when
+                    
+                    % Fetch keys
+                    [keyIsDown, secs, keyCode] = KbCheck;
+                    
+                    if keyIsDown
+                        % ~~~ ESCAPE key ? ~~~
+                        [ EXIT, StopTime ] = Common.Interrupt( keyCode, ER, RR, StartTime );
+                        if EXIT
+                            break
+                        end
+                    end
+                    
+                end % while
+                if EXIT
+                    break
+                end
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
+                
             otherwise % ---------------------------------------------------
                 %% ~~~ Step 1 : Jitter between trials ~~~
                 
