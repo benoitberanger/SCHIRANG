@@ -6,7 +6,7 @@ if strcmp(S.OperationMode,'Acquisition')
     disp('----------------------------------')
     disp('      Waiting for trigger "t"     ')
     disp('                OR                ')
-    disp('   Press "s" to emulate trigger   ')
+    %     disp('   Press "s" to emulate trigger   ')
     disp('      Press "Escape" to abort     ')
     disp('----------------------------------')
     disp(' ')
@@ -28,6 +28,7 @@ if strcmp(S.OperationMode,'Acquisition')
                     
                     if keyCode(S.Parameters.Keybinds.TTL_t_ASCII) % || keyCode(S.Parameters.Keybinds.emulTTL_s_ASCII)
                         
+                        fprintf('Waiting for TTL : MRI trigger received \n')
                         break
                         
                     elseif keyCode(S.Parameters.Keybinds.Stop_Escape_ASCII)
@@ -47,6 +48,7 @@ if strcmp(S.OperationMode,'Acquisition')
                     
                     if keyCode(S.Parameters.Keybinds.TTL_t_ASCII) % || keyCode(S.Parameters.Keybinds.emulTTL_s_ASCII)
                         
+                        fprintf('Waiting for TTL : MRI trigger received \n')
                         break
                         
                     elseif keyCode(S.Parameters.Keybinds.Stop_Escape_ASCII)
@@ -66,7 +68,7 @@ if strcmp(S.OperationMode,'Acquisition')
     
 else % in DebugMod
     
-    disp('Waiting for TTL : DebugMode')
+    fprintf('Waiting for TTL : DebugMode \n')
     
     TriggerTime = GetSecs;
     

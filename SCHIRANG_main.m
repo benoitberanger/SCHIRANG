@@ -368,14 +368,7 @@ assignin('base', 'durations', durations);
 if strcmp(S.EyelinkMode,'On')
     
     % Stop recording and retrieve the file
-    Eyelink.StopRecording( S.EyelinkFile , S.DataPath )
-    
-    if ~strcmp(S.Task,'EyelinkCalibration')
-        
-        % Rename the file
-        movefile([S.DataPath EyelinkFile '.edf'], [S.DataFile '.edf'])
-        
-    end
+    Eyelink.StopRecording( S.EyelinkFile )
     
 end
 

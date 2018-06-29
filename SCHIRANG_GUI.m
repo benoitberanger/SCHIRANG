@@ -361,10 +361,10 @@ else % Create the figure
     
     %% Panel : Eyelink mode
     
-    el_shift = 0.30;
+    el_shift = 0.25;
     
-    p_el.x = panelProp.xposP + el_shift;
-    p_el.w = panelProp.wP - el_shift ;
+    p_el.x = panelProp.xposP/2 + el_shift;
+    p_el.w = panelProp.wP - el_shift + panelProp.xposP/2;
     
     panelProp.countP = panelProp.countP - 1;
     p_el.y = panelProp.yposP(panelProp.countP);
@@ -382,7 +382,7 @@ else % Create the figure
     % Checkbox : Windowed screen
     
     c_ws.x = panelProp.xposP;
-    c_ws.w = el_shift - panelProp.xposP;
+    c_ws.w = el_shift - panelProp.xposP/2;
     
     c_ws.y = panelProp.yposP(panelProp.countP)-0.01 ;
     c_ws.h = p_el.h * 0.3;
@@ -506,7 +506,7 @@ else % Create the figure
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    p_el_dw.nbO    = 3; % Number of objects
+    p_el_dw.nbO    = 4.5; % Number of objects
     p_el_dw.Ow     = 1/(p_el_dw.nbO + 1); % Object width
     p_el_dw.countO = 0; % Object counter
     p_el_dw.xposO  = @(countO) p_el_dw.Ow/(p_el_dw.nbO+1)*countO + (countO-1)*p_el_dw.Ow;
@@ -563,7 +563,26 @@ else % Create the figure
         'String','Calibration',...
         'BackgroundColor',buttonBGcolor,...
         'Tag',b_cal.tag,...
-        'Callback',@SCHIRANG_main);
+        'Callback',@pushbutton_EyelinkCalibration_Callback);
+    
+    
+    % ---------------------------------------------------------------------
+    % Pushbutton : Download EL files according to the SubjectID
+    
+    p_el_dw.countO = p_el_dw.countO + 1;
+    b_cal.x   = p_el_dw.xposO(p_el_dw.countO);
+    b_cal.y   = p_el_dw.y ;
+    b_cal.w   = p_el_dw.Ow*1.5;
+    b_cal.h   = p_el_dw.h;
+    b_cal.tag = 'pushbutton_DownloadELfiles';
+    handles.(b_cal.tag) = uicontrol(handles.uipanel_EyelinkMode,...
+        'Style','pushbutton',...
+        'Units', 'Normalized',...
+        'Position',[b_cal.x b_cal.y b_cal.w b_cal.h],...
+        'String','Download files',...
+        'BackgroundColor',buttonBGcolor*0.9,...
+        'Tag',b_cal.tag,...
+        'Callback',@pushbutton_DownloadELfiles_Callback);
     
     
     % ---------------------------------------------------------------------
@@ -571,7 +590,7 @@ else % Create the figure
     
     b_fsd.x = c_pp.x + c_pp.h;
     b_fsd.y = p_el_up.y ;
-    b_fsd.w = p_el_dw.Ow*1.25;
+    b_fsd.w = p_el_dw.Ow*1.50;
     b_fsd.h = p_el_dw.h;
     handles.pushbutton_ForceShutDown = uicontrol(handles.uipanel_EyelinkMode,...
         'Style','pushbutton',...
@@ -862,7 +881,7 @@ switch get(hObject,'Tag')
     case 'pushbutton_Check_AroundCEIL'
         Task = 'AroundCEIL';
     otherwise
-            error('task name ?')
+        error('task name ?')
 end
 
 CheckImagesDir( SubjectID , Task )
