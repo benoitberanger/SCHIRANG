@@ -173,21 +173,6 @@ switch OperationMode
 end
 
 
-%% GUI : Parallel port ?
-
-switch get( handles.checkbox_ParPort , 'Value' )
-    
-    case 1
-        ParPort = 'On';
-    case 0
-        ParPort = 'Off';
-end
-S.ParPort = ParPort;
-S.ParPortMessages = Common.PrepareParPort;
-handles.ParPort    = ParPort;
-
-
-
 %% GUI : Left or right handed ?
 
 switch get(get(handles.uipanel_LeftRight,'SelectedObject'),'Tag')
@@ -200,6 +185,20 @@ switch get(get(handles.uipanel_LeftRight,'SelectedObject'),'Tag')
 end
 
 S.Side = Side;
+
+
+%% GUI : Parallel port ?
+
+switch get( handles.checkbox_ParPort , 'Value' )
+    
+    case 1
+        ParPort = 'On';
+    case 0
+        ParPort = 'Off';
+end
+S.ParPort = ParPort;
+S.ParPortMessages = Common.PrepareParPort;
+handles.ParPort    = ParPort;
 
 
 %% GUI : Check if Eyelink toolbox is available

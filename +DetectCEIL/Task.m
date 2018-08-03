@@ -43,6 +43,8 @@ try
         eventCategory = EP.Get('Category',evt);
         eventValue    = EP.Get('Value'   ,evt);
         eventValueIDX = EP.Get('index'   ,evt);
+        eventNameClean= regexprep( eventName      , '-' , 'm' );
+        eventNameClean= regexprep( eventNameClean , '+' , 'p' );
         
         switch eventName
             
@@ -75,6 +77,7 @@ try
                 Cross.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip',S.PTB.wPtr, StartTime + EP.Data{evt,2} - S.PTB.slack);
+                Common.SendParPortMessage('FixationCross')
                 
                 ER.AddEvent({EP.Data{evt,1} lastFlipOnset-StartTime []});
                 RR.AddEvent({'FixationCross' lastFlipOnset-StartTime [] []})
@@ -109,6 +112,7 @@ try
                 when = lastFlipOnset + Parameters.Answer - S.PTB.slack;
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                Common.SendParPortMessage('FixationCross')
                 ER.AddEvent({eventName lastFlipOnset-StartTime []})
                 RR.AddEvent({['Jitter__' eventName] lastFlipOnset-StartTime [] []})
                 
@@ -139,6 +143,7 @@ try
                 
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                Common.SendParPortMessage('Blank')
                 RR.AddEvent({['Blank__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,6 +176,7 @@ try
                 currentImage.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                Common.SendParPortMessage(sprintf('%s_%s',S.Task,eventNameClean))
                 RR.AddEvent({['Picture__' eventName] lastFlipOnset-StartTime [] []})
                 
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -202,6 +208,7 @@ try
                 Question.Draw
                 Screen('DrawingFinished',S.PTB.wPtr);
                 lastFlipOnset = Screen('Flip', S.PTB.wPtr, when);
+                Common.SendParPortMessage('Answer')
                 RR.AddEvent({['Answer__' eventName] lastFlipOnset-StartTime [] []})
                 
                 when = lastFlipOnset + Parameters.Answer - S.PTB.slack;

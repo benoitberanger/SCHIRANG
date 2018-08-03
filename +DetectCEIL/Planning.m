@@ -11,8 +11,8 @@ if nargin < 1 % only to plot the paradigme when we execute the function outside 
     %     S.OperationMode   = 'FastDebug';
     %     S.OperationMode   = 'RealisticDebug';
     
-%     S.Task            = 'DetectCEIL';
-        S.Task            = 'AroundCEIL';
+    %     S.Task            = 'DetectCEIL';
+    S.Task            = 'AroundCEIL';
     
 end
 
