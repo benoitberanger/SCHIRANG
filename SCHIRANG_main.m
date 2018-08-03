@@ -228,23 +228,14 @@ switch get(get(handles.uipanel_EyelinkMode,'SelectedObject'),'Tag')
         % Eyelink connected ?
         Eyelink.IsConnected
         
-        % File name for the eyelink : 8 char maximum
-        switch Task
-            case 'EyelinkCalibration'
-                task = 'E'; % don't care...
-            case 'DetectCEIL'
-                task = 'D';
-            case 'AroundCEIL'
-                task = 'A';
-            otherwise
-                error('SCHIRANG:Task','Task ?')
-        end
+        eyelink_max_finename = 8;
+        str = ['a':'z' 'A':'Z' '0':'9'];
+        ln_str = length(str);
         
-        EyelinkFile_noRun = [ 'SC' SubjectID task ];
+        name_num = randi(ln_str,[1 eyelink_max_finename]);
+        name_str = str(name_num);
         
-        EyelinkFile = [EyelinkFile_noRun sprintf('%0.2d',RunNumber)];
-        
-        S.EyelinkFile = EyelinkFile;
+        S.EyelinkFile = name_str;
         
     otherwise
         

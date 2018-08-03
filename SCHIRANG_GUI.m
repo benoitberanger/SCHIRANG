@@ -616,10 +616,7 @@ else % Create the figure
         'Position',[p_tk.x p_tk.y p_tk.w p_tk.h],...
         'BackgroundColor',figureBGcolor);
     
-    p_tk.nbO    = 2; % Number of objects
-    p_tk.Ow     = 1/(p_tk.nbO + 1); % Object width
-    p_tk.countO = 0; % Object counter
-    p_tk.xposO  = @(countO) p_tk.Ow/(p_tk.nbO+1)*countO + (countO-1)*p_tk.Ow;
+    p_tk = Object_Xpos_Xwidth_dispacher([2 1 2],p_tk);
     
     buttun_y = 0.05;
     buttun_h = 0.60;
@@ -630,10 +627,10 @@ else % Create the figure
     % ---------------------------------------------------------------------
     % Pushbutton : Check DetectCEIL
     
-    p_tk.countO  = p_tk.countO + 1;
-    b_check_dceil.x   = p_tk.xposO(p_tk.countO);
+    p_tk.count  = p_tk.count + 1;
+    b_check_dceil.x   = p_tk.xpos(p_tk.count);
     b_check_dceil.y   = buttun_y_check;
-    b_check_dceil.w   = p_tk.Ow;
+    b_check_dceil.w   = p_tk.xwidth(p_tk.count);
     b_check_dceil.h   = buttun_h_check;
     b_check_dceil.tag = 'pushbutton_Check_DetectCEIL';
     handles.(b_check_dceil.tag) = uicontrol(handles.uipanel_Task,...
@@ -650,9 +647,9 @@ else % Create the figure
     % ---------------------------------------------------------------------
     % Pushbutton : DetectCEIL
     
-    b_dceil.x   = p_tk.xposO(p_tk.countO);
+    b_dceil.x   = p_tk.xpos(p_tk.count);
     b_dceil.y   = buttun_y;
-    b_dceil.w   = p_tk.Ow;
+    b_dceil.w   = p_tk.xwidth(p_tk.count);
     b_dceil.h   = buttun_h;
     b_dceil.tag = 'pushbutton_DetectCEIL';
     handles.(b_dceil.tag) = uicontrol(handles.uipanel_Task,...
@@ -666,13 +663,34 @@ else % Create the figure
         'Tooltip','Show picts from 0 to +100 to sample the psychometric curve and detecet the 50% ceil');
     
     
+    %----------------------------------------------------------------------
+    % Pushbutton : Plot psychometric curve
+    
+    p_tk.count  = p_tk.count + 1;
+    b_plot.x   = p_tk.xpos(p_tk.count);
+    b_plot.y   = buttun_y_check;
+    b_plot.w   = p_tk.xwidth(p_tk.count);
+    b_plot.h   = buttun_h_check;
+    b_plot.tag = 'pushbutton_Plot';
+    handles.(b_plot.tag) = uicontrol(handles.uipanel_Task,...
+        'Style','pushbutton',...
+        'Units', 'Normalized',...
+        'Position',[b_plot.x b_plot.y b_plot.w b_plot.h],...
+        'String','Plot',...
+        'BackgroundColor',buttonBGcolor,...
+        'Tag',b_plot.tag,...
+        'Callback',@pushbutton_Plot,...
+        'ButtonDownFcn',@pushbutton_Plot,...
+        'Tooltip','Right click : plot last data ("Last file") // Left click : UI to select a file & plot');
+    
+    
     % ---------------------------------------------------------------------
     % Pushbutton : Check AroundCEIL
     
-    p_tk.countO  = p_tk.countO + 1;
-    b_check_aceil.x   = p_tk.xposO(p_tk.countO);
+    p_tk.count  = p_tk.count + 1;
+    b_check_aceil.x   = p_tk.xpos(p_tk.count);
     b_check_aceil.y   = buttun_y_check;
-    b_check_aceil.w   = p_tk.Ow;
+    b_check_aceil.w   = p_tk.xwidth(p_tk.count);
     b_check_aceil.h   = buttun_h_check;
     b_check_aceil.tag = 'pushbutton_Check_AroundCEIL';
     handles.(b_check_aceil.tag) = uicontrol(handles.uipanel_Task,...
@@ -689,9 +707,9 @@ else % Create the figure
     % ---------------------------------------------------------------------
     % Pushbutton : AroundCEIL
     
-    b_aceil.x   = p_tk.xposO(p_tk.countO);
+    b_aceil.x   = p_tk.xpos(p_tk.count);
     b_aceil.y   = buttun_y;
-    b_aceil.w   = p_tk.Ow;
+    b_aceil.w   = p_tk.xwidth(p_tk.count);
     b_aceil.h   = buttun_h;
     b_aceil.tag = 'pushbutton_AroundCEIL';
     handles.(b_aceil.tag) = uicontrol(handles.uipanel_Task,...
@@ -830,13 +848,13 @@ end % function
 % -------------------------------------------------------------------------
 function edit_SubjectID_Callback(hObject, ~)
 
-NrChar = 3;
+MinNrChar = 3;
 
 id_str = get(hObject,'String');
 
-if length(id_str) ~= NrChar
+if length(id_str) < MinNrChar
     set(hObject,'String','')
-    error('SubjectID must be %d chars, such as 001, 002, ...', NrChar)
+    error('SubjectID must be at least %d chars', MinNrChar)
 end
 
 fprintf('SubjectID OK : %s \n', id_str)
@@ -889,3 +907,102 @@ CheckImagesDir( SubjectID , Task )
 
 end % function
 
+
+% -------------------------------------------------------------------------
+function pushbutton_EyelinkCalibration_Callback(hObject, ~)
+handles = guidata(hObject);
+
+% Screen mode selection
+AvalableDisplays = get(handles.listbox_Screens,'String');
+SelectedDisplay = get(handles.listbox_Screens,'Value');
+wPtr = str2double( AvalableDisplays(SelectedDisplay) );
+
+Eyelink.OpenCalibration(wPtr);
+
+end % function
+
+
+% -------------------------------------------------------------------------
+function pushbutton_DownloadELfiles_Callback(hObject, ~)
+handles = guidata(hObject);
+
+SubjectID = get(handles.edit_SubjectID,'String');
+if isempty(SubjectID)
+    warning('SubjectID:Empty','SubjectID is empty')
+    return
+end
+
+DataPath = [fileparts(pwd) filesep 'data' filesep SubjectID filesep];
+el_file = [DataPath 'eyelink_files_to_download.txt'];
+
+if ~exist(el_file,'file')
+    error('File does not exists : %s', el_file)
+end
+
+Eyelink.downloadELfiles(DataPath)
+
+end % function
+
+
+% % -------------------------------------------------------------------------
+% function SubjectID = fetch_SubjectID(handles)
+% 
+% SubjectID = get(handles.edit_SubjectID,'String');
+% if isempty(SubjectID)
+%     error('SubjectID:Empty','SubjectID is empty')
+% end
+% 
+% end
+
+
+% -------------------------------------------------------------------------
+function obj = Object_Xpos_Xwidth_dispacher( vect , obj )
+
+obj.vect  = vect; % relative proportions of each panel, from left to right
+
+obj.vectLength    = length(obj.vect);
+obj.vectTotal     = sum(obj.vect);
+obj.adjustedTotal = obj.vectTotal + 1;
+obj.unitWidth     = 1/obj.adjustedTotal;
+obj.interWidth    = obj.unitWidth/obj.vectLength;
+
+obj.count  = 0;
+obj.xpos   = @(count) obj.unitWidth*sum(obj.vect(1:(count-1))) + 0.8*count*obj.interWidth;
+obj.xwidth = @(count) obj.vect(count)*obj.unitWidth;
+
+end % function
+
+% -------------------------------------------------------------------------
+function pushbutton_Plot(~, eventdata)
+
+switch eventdata.EventName
+    
+    case 'Action'
+        
+        global S %#ok<TLEV>
+        
+        if isempty(S)
+            warning('No stats to plot')
+            return
+        end
+        
+        PlotPsychometric( S )
+        
+    case 'ButtonDown'
+        
+        % Get file
+        [filename, pathname] = uigetfile(fullfile('..','data','*.mat'));
+        
+        if isnumeric(filename)
+            return
+        end
+        
+        % Load
+        L = load(fullfile(pathname,filename));
+        
+        % Plot loaded file
+        PlotPsychometric( L.S )
+        
+end
+
+end % function
