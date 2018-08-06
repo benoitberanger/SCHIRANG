@@ -54,6 +54,7 @@ for c = 1 : nrCat
     title(cat)
     grid on
     grid minor
+    ylim([0 1])
     
     %     xticks(0:5:100)
     
